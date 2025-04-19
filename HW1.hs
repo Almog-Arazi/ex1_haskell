@@ -24,22 +24,55 @@ import Prelude (Bool (..), Eq (..), Foldable (sum), Int, Integer, Num (..), Ord 
 ---------------------------------------------------
 
 curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
+curry3 f x y z = f (x, y, z)
+
 uncurry3 :: (a -> b -> c -> d) -> (a, b, c) -> d
+uncurry3 f (x, y, z) = f x y z
+
 fst3 :: (a, b, c) -> a
+fst3 (x, _, _) = x
+    
 snd3 :: (a, b, c) -> b
+snd3 (_, y, _) = y
+
 thd3 :: (a, b, c) -> c
+thd3 (_, _, z) = z
+
 dropFst :: (a, b, c) -> (b, c)
+dropFst (x, y, z) = (y, z)
+
 dropSnd :: (a, b, c) -> (a, c)
+dropSnd (x, y, z) = (x, z)
+
 dropThd :: (a, b, c) -> (a, b)
+dropThd (x, y, z) = (x, y)
+
 mapPair :: (a -> b) -> (a, a) -> (b, b)
+mapPair f (x, y) = (f x, f y)
+
 pairApply :: (a -> b) -> (a -> c) -> a -> (b, c)
+pairApply f g x = (f x, g x)
+
 const :: a -> b -> a
+const value _ = value
+
 constSecond :: a -> b -> b
+constSecond value _ = value
+
 const2 :: a -> b -> c -> a
+const2 value _ _ = value
+
+
+
+
+
 -- Generatlizations of (.)
 (.:) :: (c -> d) -> (a -> b -> c) -> a -> b -> d -- Hint: We saw this in class!
+
 (.:.) :: (d -> e) -> (a -> b -> c -> d) -> a -> b -> c -> e
+
 (.::) :: (e -> f) -> (a -> b -> c -> d -> e) -> a -> b -> c -> d -> f
+
 (.::.) :: (f -> g) -> (a -> b -> c -> d -> e -> f) -> a -> b -> c -> d -> e -> g
 -- How can we ever implement such a function!?
 impossible :: a -> b
