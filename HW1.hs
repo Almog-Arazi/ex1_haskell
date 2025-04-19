@@ -1,4 +1,6 @@
-{-# LANGUAGE GHC2024 #-}
+{-# LANGUAGE GHC2021 #-}
+{-# LANGUAGE LambdaCase #-} 
+{-# LANGUAGE DisambiguateRecordFields #-} 
 -- Implement the following functions.
 -- When you're done, ghc -Wall -Werror HW1.hs should successfully compile.
 --
