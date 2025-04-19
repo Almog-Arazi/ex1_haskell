@@ -50,20 +50,20 @@ dropThd (x, y, z) = (x, y)
 mapPair :: (a -> b) -> (a, a) -> (b, b)
 mapPair f (x, y) = (f x, f y)
 
+
 pairApply :: (a -> b) -> (a -> c) -> a -> (b, c)
 pairApply f g x = (f x, g x)
+
+
 
 const :: a -> b -> a
 const value _ = value
 
 constSecond :: a -> b -> b
-constSecond value _ = value
+constSecond  _ value  = value
 
 const2 :: a -> b -> c -> a
 const2 value _ _ = value
-
-
-
 
 
 -- Generatlizations of (.)
