@@ -55,7 +55,6 @@ pairApply :: (a -> b) -> (a -> c) -> a -> (b, c)
 pairApply f g x = (f x, g x)
 
 
-
 const :: a -> b -> a
 const value _ = value
 
@@ -68,14 +67,21 @@ const2 value _ _ = value
 
 -- Generatlizations of (.)
 (.:) :: (c -> d) -> (a -> b -> c) -> a -> b -> d -- Hint: We saw this in class!
+(.:) f g a b = f (g a b)
 
 (.:.) :: (d -> e) -> (a -> b -> c -> d) -> a -> b -> c -> e
+(.:.) f g a b c = f (g a b c)
 
 (.::) :: (e -> f) -> (a -> b -> c -> d -> e) -> a -> b -> c -> d -> f
+(.::) f g a b c d = f (g a b c d)
 
 (.::.) :: (f -> g) -> (a -> b -> c -> d -> e -> f) -> a -> b -> c -> d -> e -> g
+(.::.) f g a b c d e = f (g a b c d e)
+
 -- How can we ever implement such a function!?
 impossible :: a -> b
+impossible _ = undefined
+
 ---------------------------------------------------
 -- Section 2: Function Composition & Transformation
 ---------------------------------------------------
