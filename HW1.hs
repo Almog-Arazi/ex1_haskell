@@ -123,16 +123,39 @@ type Generator a = (a -> a, a -> Bool, a)
 -- Retrieves the nth value from a generator, or the last element. The seed does not count as an element.
 -- If n is negative, return the seed.
 nthGen :: Integer -> Generator a -> a
+nthGen n (getNext, hasNext, seed) 
+    | n <= 0 = seed
+    | not (hasNext seed) = seed
+    | otherwise = nthGen (n - 1) (getNext, hasNext, getNext seed)
+
 hasNext :: Generator a -> Bool
+hasNext (getNext, hasMore, seed)  = hasMore seed
+
 -- Behavior is undefined if the generator has stopped.
 nextGen :: Generator a -> Generator a
+nextGen (getNext, hasMore, seed) = (getNext, hasMore, getNext seed)
+
 -- Will not terminate if the generator does not stop.
 lengthGen :: Generator a -> Integer
+lengthGen (getNext, hasMore, seed) = 
+    if hasMore seed then 1 + lengthGen (nextGen (getNext, hasMore, seed))
+    else 0
+
 -- Should terminate for infinite generators as well.
 hasLengthOfAtLeast :: Integer -> Generator a -> Bool
+hasLengthOfAtLeast n (getNext, hasMore, seed) 
+    | n <= 0 = True
+    | not (hasMore seed) = False
+    | otherwise = hasLengthOfAtLeast (n - 1) (nextGen (getNext, hasMore, seed))
+
 constGen :: a -> Generator a
+constGen value = (const value, const True, value)
+
 foreverGen :: (a -> a) -> a -> Generator a
+foreverGen getNext seed = (getNext, const True, seed)
+
 emptyGen :: Generator a
+emptyGen = (undefined, const False, undefined)
 
 -- Generates all integers except 0.
 integers :: Generator Integer
