@@ -87,12 +87,28 @@ impossible _ = undefined
 ---------------------------------------------------
 -- Count the number of digits of an integer
 countDigits :: Integer -> Integer
+countDigits n | n < 0 = countDigits (-n)
+              | n < 10 = 1
+              | otherwise = 1 + countDigits (n `div` 10)
+
 -- Sums the  digits of an integer
 sumDigits :: Integer -> Integer
+sumDigits n | n < 0 = sumDigits (-n)
+            | n < 10 = n
+            | otherwise = n `mod` 10 + sumDigits (n `div` 10)
+
 -- Reverses the  digits of an integer
 reverseDigits :: Integer -> Integer
+reverseDigits n | n < 0 = -reverseDigits (-n)
+                | n < 10 = n
+                | otherwise = (n `mod` 10) * (10 ^ (countDigits n - 1)) + reverseDigits (n `div` 10)
+
+
 -- Returns the length of the Collatz sequence starting from x. collatzLength 1 = 0. You can assume the input is positive.
 collatzLength :: Integer -> Integer
+collatzLength n | n == 1 = 0
+                | even n = 1 +collatzLength (n `div` 2)
+                | otherwise = 1 + collatzLength (3 * n + 1)
 
 ------------------------
 -- Section 3: Generators
