@@ -158,20 +158,40 @@ emptyGen :: Generator a
 emptyGen = (undefined, const False, undefined)
 
 -- Generates all integers except 0.
+nextInt :: Integer -> Integer
+nextInt n | n >= 0 = -n
+          | otherwise = n + 1
+
 integers :: Generator Integer
+integers = (nextInt, const True, 1)
+
 -- Sums all the values produced by a generator until it stops.
 sumGen :: Generator Integer -> Integer
+sumGen (getNext, hasMore, seed) =
+    if hasMore seed then getNext seed + sumGen (nextGen (getNext, hasMore, seed))
+    else 0
+
 -- Checks if a generator produces a value that satisfies a predicate.
 anyGen :: (a -> Bool) -> Generator a -> Bool
+anyGen pred (getNext, hasMore, seed) 
+    | not (hasMore seed) = False
+    | pred (getNext seed) = True
+    | otherwise = anyGen pred (nextGen (getNext, hasMore, seed))
+
 -- Adds an additional predicate to a generator.
 andAlso :: (a -> Bool) -> Generator a -> Generator a
+andAlso pred (getNext, hasMore, seed) = (getNext, \x -> hasMore x && pred x, seed)
+
 -- Bonus (15 points): Generates all positive divisors of a number smaller than the number itself.
 divisors :: Integer -> Generator Integer
+
+
 -----------------------------------
 -- Section 4: Number classification
 -----------------------------------
 
 isPrime :: Integer -> Bool
+
 nextPrime :: Integer -> Integer
 primes :: Generator Integer
 isHappy :: Integer -> Bool
