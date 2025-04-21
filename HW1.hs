@@ -184,7 +184,20 @@ andAlso pred (getNext, hasMore, seed) = (getNext, \x -> hasMore x && pred x, see
 
 -- Bonus (15 points): Generates all positive divisors of a number smaller than the number itself.
 divisors :: Integer -> Generator Integer
+divisors n = (nextDiv, hasMore, 0)
+  where
+    nextDiv x =
+      let k = x + 1
+      in if k >= n
+           then n   
+           else if n `mod` k == 0
+             then k
+             else nextDiv k
 
+
+    hasMore x =
+      let k = x + 1
+      in k < n && n `mod` k == 0
 
 -----------------------------------
 -- Section 4: Number classification
