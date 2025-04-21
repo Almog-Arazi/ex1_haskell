@@ -40,13 +40,13 @@ thd3 :: (a, b, c) -> c
 thd3 (_, _, z) = z
 
 dropFst :: (a, b, c) -> (b, c)
-dropFst (x, y, z) = (y, z)
+dropFst (_, y, z) = (y, z)
 
 dropSnd :: (a, b, c) -> (a, c)
-dropSnd (x, y, z) = (x, z)
+dropSnd (x, _, z) = (x, z)
 
 dropThd :: (a, b, c) -> (a, b)
-dropThd (x, y, z) = (x, y)
+dropThd (x, y, _) = (x, y)
 
 mapPair :: (a -> b) -> (a, a) -> (b, b)
 mapPair f (x, y) = (f x, f y)
@@ -124,13 +124,13 @@ type Generator a = (a -> a, a -> Bool, a)
 -- Retrieves the nth value from a generator, or the last element. The seed does not count as an element.
 -- If n is negative, return the seed.
 nthGen :: Integer -> Generator a -> a
-nthGen n (getNext, hasNext, seed) 
+nthGen n (getNext, hasMore, seed) 
     | n <= 0 = seed
-    | not (hasNext seed) = seed
-    | otherwise = nthGen (n - 1) (getNext, hasNext, getNext seed)
+    | not (hasMore seed) = seed
+    | otherwise = nthGen (n - 1) (getNext, hasMore, getNext seed)
 
 hasNext :: Generator a -> Bool
-hasNext (getNext, hasMore, seed)  = hasMore seed
+hasNext (_, hasMore, seed)  = hasMore seed
 
 -- Behavior is undefined if the generator has stopped.
 nextGen :: Generator a -> Generator a
@@ -185,7 +185,7 @@ andAlso pred (getNext, hasMore, seed) = (getNext, \x -> hasMore x && pred x, see
 
 -- Bonus (15 points): Generates all positive divisors of a number smaller than the number itself.
 divisors :: Integer -> Generator Integer
-divisors n = undefined
+divisors _ = undefined
 
 -----------------------------------
 -- Section 4: Number classification
@@ -227,7 +227,7 @@ isHappy n = checkHappy (abs n)
 isArmstrong :: Integer -> Bool
 isArmstrong n =
   let
-    number     = abs n
+    number = abs n
     digitsCount = countDigits number
   in sumOfPowers number digitsCount == number
 
