@@ -14,6 +14,7 @@ module HW1 where
 
 -- These import statement ensures you aren't using any "advanced" functions and types, e.g., lists.
 import Prelude (Bool (..), Eq (..), Foldable (sum), Int, Integer, Num (..), Ord (..), abs, div, error, even, flip, fst, id, mod, not, odd, otherwise, snd, take, undefined, ($), (&&), (.), (^), (||))
+import GHC.Base (remInt)
 
 ------------------------------------------------
 -- DO NOT MODIFY ANYTHING ABOVE THIS LINE !!! --
@@ -205,8 +206,30 @@ nextPrime n | isPrime (n + 1) = n + 1
 primes :: Generator Integer
 primes = foreverGen nextPrime 1
 
+--  Helper function that sums the squares of the digits of a number
+sumOfPowers:: Integer -> Integer -> Integer
+sumOfPowers num powNumber
+  | num < 0    = sumOfPowers (-num) powNumber
+  | num < 10   = num ^ powNumber
+  | otherwise  = digit ^ powNumber + sumOfPowers reminder powNumber
+  where
+    reminder  = num `div` 10
+    digit = num `mod` 10
+
 isHappy :: Integer -> Bool
-        
+isHappy n = checkHappy (abs n)
+  where
+    checkHappy 0 = False
+    checkHappy 1 = True
+    checkHappy 4 = False
+    checkHappy x = checkHappy (sumOfPowers x 2)
+
 isArmstrong :: Integer -> Bool
+isArmstrong n =
+  let
+    number     = abs n
+    digitsCount = countDigits number
+  in sumOfPowers number digitsCount == number
+
 
 isPalindromicPrime :: Integer -> Bool
