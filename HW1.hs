@@ -233,3 +233,6 @@ isArmstrong n =
 
 
 isPalindromicPrime :: Integer -> Bool
+isPalindromicPrime n = isPrime n && isPalindromic n
+  where
+    isPalindromic x = x == reverseDigits x
